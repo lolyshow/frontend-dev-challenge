@@ -7,6 +7,11 @@ The application is built using NextJS, TypeScript, Prisma, React Query, Tailwind
 
 The challenge consists of a variety of frontend tasks. We invite you to tailor your implementation as closely to the description as possible, otherwise be sure to document any deviations.
 
+How to start the project:
+* Copy .env.exampel into .env
+* Run `yarn db:reset`, `npm run db:reset` or `pnpm db:reset`
+* Start the project with `yarn dev`, `npm run dev` or `pnpm dev`
+
 The Swagger documentation for the Mock API for this solution is available at:
 [http://localhost:3000/api-doc](http://localhost:3000/api-doc)
 
