@@ -14,8 +14,13 @@ import { fetchData } from "~/utils";
 import type { ReturnType } from "./api/voyage/getAll";
 import { Button } from "~/components/ui/button";
 import { TABLE_DATE_FORMAT } from "~/constants";
+import { SheetDialog } from "~/components/ui/sheetdialog";
+import { useState } from "react";
 
 export default function Home() {
+  
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const { data: voyages } = useQuery<ReturnType>({
     queryKey: ["voyages"],
 
@@ -45,13 +50,17 @@ export default function Home() {
     mutation.mutate(voyageId);
   };
 
+  const handleCreateNewVoyage = () => {
+    setIsOpen(true)
+  }
+
   return (
     <>
       <Head>
         <title>Voyages | DFDS</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
+      <Layout onButtonClick={handleCreateNewVoyage}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -90,6 +99,8 @@ export default function Home() {
             ))}
           </TableBody>
         </Table>
+
+        <SheetDialog isOpen={isOpen} onOpenChange={setIsOpen}/>
       </Layout>
     </>
   );

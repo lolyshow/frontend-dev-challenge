@@ -1,14 +1,10 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
-/**
- * Relative path /api/${path}
- * @param path
- * @returns
- */
+
 export async function fetchData(path: string) {
   const response = await fetch(`/api/${path}`);
 
