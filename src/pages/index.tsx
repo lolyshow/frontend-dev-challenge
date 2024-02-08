@@ -1,6 +1,7 @@
 import {
   InvalidateQueryFilters,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -14,18 +15,28 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-
+import { fetchData } from "~/utils";
+import type { ReturnType } from "./api/voyage/getAll";
 import { Button } from "~/components/ui/button";
 import { TABLE_DATE_FORMAT } from "~/constants";
 import { SheetDialog } from "~/components/ui/sheetdialog";
 import { useState } from "react";
 import { useVoyage } from "~/hooks/useVoyage";
-import { UnitType } from "@prisma/client";
+import { UnitType, Voyage } from "@prisma/client";
 import { toast } from "~/components/ui/use-toast";
+import { ToastAction } from "~/components/ui/toast";
+import { Detailsmodal } from "~/components/ui/detailsmodal";
+import { queryClient } from "~/queryClient";
+const defaultDate = new Date();
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedUnitTypes, setSelectedUnitTypes] = useState<UnitType[]>([]);
   const { getVoyages } = useVoyage();
-  const queryClient = useQueryClient();
+  // const { data: voyages,refetch } = useQuery<ReturnType>({
+  //   queryKey: ["voyages"],
+
+  //   queryFn: () => fetchData("voyage/getAll"),
+  // });
   const mutation = useMutation({
     mutationFn: async (voyageId: string) => {
       const response = await fetch(`/api/voyage/delete?id=${voyageId}`, {
@@ -41,7 +52,7 @@ export default function Home() {
         "voyages",
       ] as InvalidateQueryFilters);
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -92,9 +103,20 @@ export default function Home() {
                 <TableCell>{voyage.portOfLoading}</TableCell>
                 <TableCell>{voyage.portOfDischarge}</TableCell>
                 <TableCell>{voyage.vessel.name}</TableCell>
+
                 <TableCell className=" cursor-pointer">
-                  {voyage.unitTypes.length}
+                  <Detailsmodal
+                    unitTypes={selectedUnitTypes}
+                    triggerElement={
+                      <div
+                        onClick={() => setSelectedUnitTypes(voyage?.unitTypes)}
+                      >
+                        {voyage.unitTypes.length}
+                      </div>
+                    }
+                  />
                 </TableCell>
+
                 <TableCell>
                   <Button
                     onClick={() => handleDelete(voyage.id)}
