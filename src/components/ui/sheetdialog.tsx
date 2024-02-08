@@ -23,6 +23,7 @@ import { useVoyage } from "~/hooks/useVoyage";
 import { SelectType } from "~/types/selectype";
 import { ComboboxDemo } from "./select";
 import { toast } from "./use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
 type CreateVoyageFormField = z.infer<typeof VouyageFormSchema>;
 export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
   const { unitTypes } = useUnitType({ fetch: true });
@@ -31,7 +32,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
   const [selectedUnitTypes, setSelectedUnitTypes] = React.useState<
     SelectType[]
   >([]);
-  const {createVoyage} = useVoyage()
+  const { createVoyage } = useVoyage();
   const [selectedVessel, setSelectedVessel] = React.useState<SelectType>({
     id: "",
     name: "",
@@ -43,7 +44,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
     formState: { errors, isSubmitting },
     setValue,
     getValues,
-    reset
+    reset,
   } = useForm<CreateNewVoyagePayload>({
     defaultValues: {
       departure: "",
@@ -66,7 +67,6 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
   };
   const handleSelectedUnitType = (selectedUnit: SelectType[]) => {
     setSelectedUnitTypes(selectedUnit);
-
   };
 
   const onSubmit: SubmitHandler<CreateVoyageFormField> = (formData) => {
@@ -75,31 +75,31 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
     const arrival = convertToAPIDateFormat(arrivalDateValue);
     const departure = convertToAPIDateFormat(departureDateValue);
     const vessel = getValues("vessel");
-    
-    const unitTypes = selectedUnitTypes.map((unitType) =>  unitType.id)
-    const payload = { ...formData, arrival, departure, vessel,unitTypes };
-    
-    createVoyage.mutate(payload)
-    
+
+    const unitTypes = selectedUnitTypes.map((unitType) => unitType.id);
+    const payload = { ...formData, arrival, departure, vessel, unitTypes };
+
+    createVoyage.mutate(payload);
   };
 
-   useEffect(() => {
-    if(createVoyage?.isSuccess){
-      reset()
+  useEffect(() => {
+    if (createVoyage?.isSuccess) {
+      reset();
       toast({
         description: "Voyage Created Successfully",
-      })
-      // toast({
-        
-      //   variant: "destructive",
-      //   title: "Uh oh! Something went wrong.",
-      //   description: "There was a problem with your request.",
-      //   action: <ToastAction altText="Try again">Try again</ToastAction>,
-      // })
-    }else if(createVoyage.isError){
+      });
       
+    } else if (createVoyage.isError) {
+
+      toast({
+
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     }
-   }, [])
+  }, []);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent>
@@ -123,7 +123,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 className="col-span-3"
               />
               {errors?.departure && (
-                <p className=" col-span-3 text-red-500">
+                <p className="col-span-3 text-red-500">
                   {errors?.departure?.message}
                 </p>
               )}
@@ -139,7 +139,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 className="col-span-3"
               />
               {errors?.arrival && (
-                <p className=" col-span-3 text-red-500">
+                <p className="col-span-3 text-red-500">
                   {errors?.arrival?.message}
                 </p>
               )}
@@ -178,7 +178,6 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
               <Label htmlFor="portOfDischarge" className="text-left">
                 Unit Type
               </Label>
-
               {unitTypes && (
                 <FancyMultiSelect
                   options={unitTypes}
@@ -190,7 +189,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
           </div>
 
           <SheetFooter>
-            <Button type="submit" disabled={isSubmitting} className=" mt-5">
+            <Button type="submit" disabled={isSubmitting} className="mt-5">
               Create Voyage
             </Button>
           </SheetFooter>
