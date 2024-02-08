@@ -1,26 +1,38 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useToast } from "~/components/ui/use-toast";
 import { CreateNewVoyagePayload } from "~/types/voyage";
+import { fetchData } from "~/utils";
+import type { ReturnType } from "../pages/api/voyage/getAll";
+
 
 export const useVoyage = () => {
+  const { toast } = useToast();
 
-    const createVoyage = useMutation({
-        mutationFn: async (payload: CreateNewVoyagePayload) => {
-          const response = await fetch(`/api/voyage/create`, {
-            method: "POST",
-            body: JSON.stringify(payload)
-          });
-    
-          if (!response.ok) {
-            throw new Error("Failed to delete the voyage");
-          }
-        },
-           onSuccess: async () => {
-            
-        },
-        }
-      );
+  const getVoyages = useQuery<ReturnType>({
+    queryKey: ["voyages"],
+    queryFn: () => fetchData("voyage/getAll"),
+  });
 
-      return {
-        createVoyage
+  const createVoyage = useMutation({
+    mutationFn: async (payload: CreateNewVoyagePayload) => {
+      const response = await fetch(`/api/voyage/create`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete the voyage");
       }
-}
+    },
+    onSuccess: async () => {
+      toast({
+        description: "Voyage Created Successfully",
+      });
+    },
+  });
+
+  return {
+    createVoyage,
+    getVoyages
+  };
+};

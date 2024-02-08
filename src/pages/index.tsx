@@ -1,4 +1,9 @@
-import { InvalidateQueryFilters, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  InvalidateQueryFilters,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { format } from "date-fns";
 import Head from "next/head";
 import Layout from "~/components/layout";
@@ -16,18 +21,16 @@ import { Button } from "~/components/ui/button";
 import { TABLE_DATE_FORMAT } from "~/constants";
 import { SheetDialog } from "~/components/ui/sheetdialog";
 import { useState } from "react";
+import { useVoyage } from "~/hooks/useVoyage";
 
 export default function Home() {
-  
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { getVoyages } = useVoyage();
+  // const { data: voyages,refetch } = useQuery<ReturnType>({
+  //   queryKey: ["voyages"],
 
-  const { data: voyages } = useQuery<ReturnType>({
-    queryKey: ["voyages"],
-
-    queryFn: () =>
-      fetchData("voyage/getAll")
-  });
-
+  //   queryFn: () => fetchData("voyage/getAll"),
+  // });
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -40,19 +43,20 @@ export default function Home() {
         throw new Error("Failed to delete the voyage");
       }
     },
-   	onSuccess: async () => {
-        await queryClient.invalidateQueries(["voyages"] as InvalidateQueryFilters);
-      },
-    }
-  );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries([
+        "voyages",
+      ] as InvalidateQueryFilters);
+    },
+  });
 
   const handleDelete = (voyageId: string) => {
     mutation.mutate(voyageId);
   };
 
   const handleCreateNewVoyage = () => {
-    setIsOpen(true)
-  }
+    setIsOpen(true);
+  };
 
   return (
     <>
@@ -69,16 +73,17 @@ export default function Home() {
               <TableHead>Port of loading</TableHead>
               <TableHead>Port of discharge</TableHead>
               <TableHead>Vessel</TableHead>
+              <TableHead>Unit Types</TableHead>
               <TableHead>&nbsp;</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {voyages?.map((voyage) => (
+            {getVoyages?.data?.map((voyage) => (
               <TableRow key={voyage.id}>
                 <TableCell>
                   {format(
                     new Date(voyage.scheduledDeparture),
-                    TABLE_DATE_FORMAT
+                    TABLE_DATE_FORMAT,
                   )}
                 </TableCell>
                 <TableCell>
@@ -87,6 +92,9 @@ export default function Home() {
                 <TableCell>{voyage.portOfLoading}</TableCell>
                 <TableCell>{voyage.portOfDischarge}</TableCell>
                 <TableCell>{voyage.vessel.name}</TableCell>
+                <TableCell className=" cursor-pointer">
+                  {voyage.unitTypes.length}
+                </TableCell>
                 <TableCell>
                   <Button
                     onClick={() => handleDelete(voyage.id)}
@@ -100,7 +108,7 @@ export default function Home() {
           </TableBody>
         </Table>
 
-        <SheetDialog isOpen={isOpen} onOpenChange={setIsOpen}/>
+        <SheetDialog isOpen={isOpen} onOpenChange={setIsOpen} />
       </Layout>
     </>
   );

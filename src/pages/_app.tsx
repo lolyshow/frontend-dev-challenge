@@ -7,6 +7,8 @@ import {
 import { type AppType } from "next/dist/shared/lib/utils";
 import React, { useState } from "react";
 import "~/styles/globals.css";
+import { Toaster } from "src/components/ui/toaster"
+
 
 const MyApp: AppType<{ dehydratedState: DehydratedState }> = ({
   Component,
@@ -17,6 +19,7 @@ const MyApp: AppType<{ dehydratedState: DehydratedState }> = ({
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={pageProps.dehydratedState}>
         <Component {...pageProps} />
+        <Toaster />
       </HydrationBoundary>
     </QueryClientProvider>
   );
