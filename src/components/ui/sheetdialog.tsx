@@ -66,6 +66,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
     setValue("vessel", selectedVessel?.id);
   };
   const handleSelectedUnitType = (selectedUnit: SelectType[]) => {
+    // setValue("unitTypes",selectedUnit)
     setSelectedUnitTypes(selectedUnit);
   };
 
@@ -78,7 +79,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
 
     const unitTypes = selectedUnitTypes.map((unitType) => unitType.id);
     const payload = { ...formData, arrival, departure, vessel, unitTypes };
-
+    // console.log("FormDataDAta",)
     createVoyage.mutate(payload);
   };
 
@@ -88,16 +89,12 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
       toast({
         description: "Voyage Created Successfully",
       });
-      
-    } else if (createVoyage.isError) {
-
+    } else if (createVoyage.isError || createVoyage.error) {
       toast({
-
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      })
+        description: "There was a problem with Voyage request.",
+      });
     }
   }, []);
   return (
@@ -112,8 +109,8 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
           </SheetHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="departure" className="text-left">
+            <div className=" flex flex-col gap-2">
+              <Label htmlFor="departure" className="">
                 Departure Date
               </Label>
               <Input
@@ -128,8 +125,8 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-left">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name" className="">
                 Arrival Date
               </Label>
               <Input
@@ -144,8 +141,8 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-left">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name" className="">
                 Port Of Loading
               </Label>
               <Input
@@ -154,8 +151,8 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="portOfDischarge" className="text-left">
+            <div className=" flex flex-col gap-2 ">
+              <Label htmlFor="portOfDischarge" className="">
                 Port Of Discharge
               </Label>
               <Input
@@ -164,9 +161,9 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="portOfDischarge" className="text-left">
-                vessel
+            <div className=" flex flex-col ">
+              <Label htmlFor="portOfDischarge" className="py-2">
+                Vessel
               </Label>
               <ComboboxDemo
                 options={vesselFormatted}
@@ -174,8 +171,8 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 selected={selectedVessel}
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="portOfDischarge" className="text-left">
+            <div className=" flex flex-col gap-2 ">
+              <Label htmlFor="portOfDischarge" className="py-2">
                 Unit Type
               </Label>
               {unitTypes && (
@@ -189,8 +186,8 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
           </div>
 
           <SheetFooter>
-            <Button type="submit" disabled={isSubmitting} className="mt-5">
-              Create Voyage
+            <Button type="submit" disabled={createVoyage.isPending} className="mt-2">
+              {createVoyage.isPending?"Sending...":"Create Voyage"}
             </Button>
           </SheetFooter>
         </form>

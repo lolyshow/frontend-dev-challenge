@@ -1,7 +1,6 @@
 import {
   InvalidateQueryFilters,
   useMutation,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -15,23 +14,17 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { fetchData } from "~/utils";
-import type { ReturnType } from "./api/voyage/getAll";
+
 import { Button } from "~/components/ui/button";
 import { TABLE_DATE_FORMAT } from "~/constants";
 import { SheetDialog } from "~/components/ui/sheetdialog";
 import { useState } from "react";
 import { useVoyage } from "~/hooks/useVoyage";
-
+import { UnitType } from "@prisma/client";
+import { toast } from "~/components/ui/use-toast";
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { getVoyages } = useVoyage();
-  // const { data: voyages,refetch } = useQuery<ReturnType>({
-  //   queryKey: ["voyages"],
-
-  //   queryFn: () => fetchData("voyage/getAll"),
-  // });
-
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (voyageId: string) => {
@@ -47,6 +40,13 @@ export default function Home() {
       await queryClient.invalidateQueries([
         "voyages",
       ] as InvalidateQueryFilters);
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Failed to delete the voyage",
+      });
     },
   });
 
@@ -107,7 +107,6 @@ export default function Home() {
             ))}
           </TableBody>
         </Table>
-
         <SheetDialog isOpen={isOpen} onOpenChange={setIsOpen} />
       </Layout>
     </>

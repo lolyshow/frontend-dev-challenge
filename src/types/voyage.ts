@@ -1,5 +1,4 @@
-import { UnitType } from "@prisma/client";
-import React from "react";
+import { UnitType, Vessel } from "@prisma/client";
 
 export interface CreateNewVoyagePayload {
   departure: string;
@@ -8,6 +7,15 @@ export interface CreateNewVoyagePayload {
   portOfDischarge: string;
   vessel: string;
   unitTypes: string[];
+}
+
+export interface VoyageResponse {
+  departure: string;
+  arrival: string;
+  portOfLoading: string;
+  portOfDischarge: string;
+  vessel: Vessel[];
+  unitTypes: UnitType[];
 }
 
 export interface CreateNewVoyageModal {

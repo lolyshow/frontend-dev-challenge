@@ -39,9 +39,9 @@ export const ComboboxDemo: React.FC<MultiSelectProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="col-span-3 justify-between"
         >
-          {selected ? selected?.name : "Select Vessel"}
+          {selected?.name ? selected?.name : "Select Vessel"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

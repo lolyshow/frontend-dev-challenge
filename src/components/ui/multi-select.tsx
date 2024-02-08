@@ -23,7 +23,7 @@ export const FancyMultiSelect: React.FC<FancyMultiSelectProps> = ({
   const handleUnselect = React.useCallback(
     (option: SelectType) => {
       const filteredData = selected.filter((s) => s.id !== option.id);
-
+      
       setSelected(filteredData);
     },
     [setSelected],
@@ -102,9 +102,9 @@ export const FancyMultiSelect: React.FC<FancyMultiSelectProps> = ({
         </div>
       </div>
       <div className="relative mt-2">
-        {open && selectables.length > 0 && (
+        { open && selectables.length > 0 && (
           <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
-            <CommandGroup className="h-full overflow-auto">
+            <CommandGroup className=" h-56 overflow-scroll">
               {selectables.map((option) => (
                 <CommandItem
                   key={option.id}
