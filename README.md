@@ -1,11 +1,7 @@
 
-# Frontend Code Challenge
+# Solution to Frontend Code Challenge 
 
-The task of this code challenge is to add functionality described below to this existing sample application: [https://github.com/dfds-frontend/frontend-dev-challenge](https://github.com/dfds-frontend/frontend-dev-challenge). Clone this project to get started.
 
-The application is built using NextJS, TypeScript, Prisma, React Query, Tailwind, zod, and [https://ui.shadcn.com/](https://ui.shadcn.com/) for ready-made components. It is expected that you will complete the tasks below using the technologies listed.
-
-The challenge consists of a variety of frontend tasks. We invite you to tailor your implementation as closely to the description as possible, otherwise be sure to document any deviations.
 
 How to start the project:
 * Copy .env.exampel into .env
@@ -15,26 +11,41 @@ How to start the project:
 The Swagger documentation for the Mock API for this solution is available at:
 [http://localhost:3000/api-doc](http://localhost:3000/api-doc)
 
-## Task 1 - Create New Voyage
-At the root of the application, place a "Create" button on the top left of the list of mock voyages.
-When pressed, the button should open [https://ui.shadcn.com/docs/components/sheet](https://ui.shadcn.com/docs/components/sheet) with the form for creating a voyage inside.
-The form should have the following validations:
-- All fields are required.
-- Departure date and time should be before arrival date and time.
-Refresh the list of voyages once a voyage has been successfully created.
-Display [https://ui.shadcn.com/docs/components/toast](https://ui.shadcn.com/docs/components/toast) with a success message.
 
-## Task 2 - Introduce UnitType Relation to Voyage
-Enable adding at least 5 UnitTypes to a voyage.
-Ensure selection of a minimum of 5 UnitTypes.
+During the assessment, I made some enhancements and modifications to the project. Here's a brief overview:
 
-## Task 3 - Modify the List
-Add a "unittypes" column to the voyages table.
-Display unit type count for each voyage.
-Clicking on unit type count opens a PopOver showing selected UnitTypes: [https://ui.shadcn.com/docs/components/popover](https://ui.shadcn.com/docs/components/popover).
-List to include:
-- Name
-- Default length
+- Integrated the `react-hook-form` library to streamline form input handling, ensuring a smoother user experience.
+- Utilized `cmdk` in conjunction with `ui.shadcn` to enhance dropdown selection functionality, offering users a searchable field and improving usability.
+- Abstracted the `getVoyage` function as a custom hook to improve code organization and facilitate potential future reusability across components or pages.
+- Added `JSON.parse(req.body)` to the API responsible for creating voyages. This was necessary to address an error encountered while processing requests, ensuring proper parsing of request data.
 
-## Task 4 - Handling Voyage Deletion Error
-You may have noticed that deleting a voyage does not always work. Add error handling to inform the user when that happens. It is sufficient to show [https://ui.shadcn.com/docs/components/toast](https://ui.shadcn.com/docs/components/toast) with the appropriate error message.
+
+# Implemetation Brief
+
+## Task 1 - Create New Voyage:
+
+Implemented a "Create" button at the top left of the list of mock voyages.
+Configured the button to open a sheet with a form for creating a voyage inside.
+Implemented form validations:
+-All fields are required.
+-Departure date and time should be before arrival date and time.
+Implemented logic to refresh the list of voyages once a voyage has been successfully created.
+Displayed a toast with a success message upon successful creation of a voyage.
+## Task 2 - Introduce UnitType Relation to Voyage:
+
+Enabled adding at least 5 UnitTypes to a voyage.
+Ensured selection of a minimum of 5 UnitTypes.
+
+## Task 3 - Modify the List:
+
+Added a "unittypes" column to the voyages table.
+Displayed unit type count for each voyage.
+Implemented functionality to open a PopOver showing selected UnitTypes upon clicking on the unit type count.
+PopOver includes:
+-Name
+-Default length
+
+## Task 4 - Handling Voyage Deletion Error:
+
+Implemented error handling to inform the user when deleting a voyage fails.
+Displayed a toast with the appropriate error message upon deletion failure.
