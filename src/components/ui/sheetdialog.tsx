@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./button";
 import {
   Sheet,
@@ -22,18 +22,16 @@ import { useUnitType } from "~/hooks/useUnitType";
 import { useVoyage } from "~/hooks/useVoyage";
 import { SelectType } from "~/types/selectype";
 import { ComboboxDemo } from "./select";
-import { toast } from "./use-toast";
-import { ToastAction } from "@radix-ui/react-toast";
 type CreateVoyageFormField = z.infer<typeof VouyageFormSchema>;
 export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
   const { unitTypes } = useUnitType({ fetch: true });
   const { vesselFormatted } = useVessel({ fetch: true });
-  const { getVoyages } = useVoyage();
-  const [selectedUnitTypes, setSelectedUnitTypes] = React.useState<
-    SelectType[]
-  >([]);
+  const [selectedUnitTypes, setSelectedUnitTypes] = useState<SelectType[]>([]);
   const { createVoyage } = useVoyage();
-  const [selectedVessel, setSelectedVessel] = React.useState<SelectType>({
+  const [unitTypeError, setUnitTypeError] = useState<string>("");
+  const [vesselError, setVesselError] = useState<string>("");
+  const [isFormReset, setIsFormReset] = useState(false);
+  const [selectedVessel, setSelectedVessel] = useState<SelectType>({
     id: "",
     name: "",
   });
@@ -41,14 +39,13 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setValue,
     getValues,
     reset,
   } = useForm<CreateNewVoyagePayload>({
     defaultValues: {
-      departure: "",
-      arrival: "",
+      vessel: "",
     },
     resolver: zodResolver(VouyageFormSchema),
   });
@@ -62,11 +59,12 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
   };
 
   const handleSelectedVessel = (selectedVessel: SelectType) => {
+    setVesselError("");
     setSelectedVessel(selectedVessel);
     setValue("vessel", selectedVessel?.id);
   };
   const handleSelectedUnitType = (selectedUnit: SelectType[]) => {
-    // setValue("unitTypes",selectedUnit)
+    setUnitTypeError("");
     setSelectedUnitTypes(selectedUnit);
   };
 
@@ -76,27 +74,26 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
     const arrival = convertToAPIDateFormat(arrivalDateValue);
     const departure = convertToAPIDateFormat(departureDateValue);
     const vessel = getValues("vessel");
-
-    const unitTypes = selectedUnitTypes.map((unitType) => unitType.id);
-    const payload = { ...formData, arrival, departure, vessel, unitTypes };
-    // console.log("FormDataDAta",)
-    createVoyage.mutate(payload);
+    if (selectedUnitTypes?.length < 2) {
+      setUnitTypeError("Please Select 2 or more Unit Types");
+    } else if (vessel === "") {
+      setVesselError("Please Select a Vessel");
+    } else {
+      setIsFormReset(false);
+      const unitTypes = selectedUnitTypes.map((unitType) => unitType.id);
+      const payload = { ...formData, arrival, departure, vessel, unitTypes };
+      createVoyage.mutate(payload);
+    }
   };
 
   useEffect(() => {
-    if (createVoyage?.isSuccess) {
+    if (createVoyage.isSuccess && isFormReset === false) {
       reset();
-      toast({
-        description: "Voyage Created Successfully",
-      });
-    } else if (createVoyage.isError || createVoyage.error) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with Voyage request.",
-      });
+      setSelectedUnitTypes([]);
+      setSelectedVessel({ id: "", name: "" });
+      setIsFormReset(true);
     }
-  }, []);
+  }, [createVoyage]);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent>
@@ -150,6 +147,11 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 {...register("portOfLoading")}
                 className="col-span-3"
               />
+              {errors?.portOfLoading && (
+                <p className="col-span-3 text-red-500">
+                  {errors?.portOfLoading?.message}
+                </p>
+              )}
             </div>
             <div className=" flex flex-col gap-2 ">
               <Label htmlFor="portOfDischarge" className="">
@@ -160,6 +162,11 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 {...register("portOfDischarge")}
                 className="col-span-3"
               />
+              {errors?.portOfDischarge && (
+                <p className="col-span-3 text-red-500">
+                  {errors?.portOfDischarge?.message}
+                </p>
+              )}
             </div>
             <div className=" flex flex-col ">
               <Label htmlFor="portOfDischarge" className="py-2">
@@ -170,6 +177,9 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                 setSelected={handleSelectedVessel}
                 selected={selectedVessel}
               />
+              {vesselError !== "" && (
+                <p className="col-span-3 text-red-500">{vesselError}</p>
+              )}
             </div>
             <div className=" flex flex-col gap-2 ">
               <Label htmlFor="portOfDischarge" className="py-2">
@@ -182,12 +192,19 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
                   setSelected={handleSelectedUnitType}
                 />
               )}
+              {unitTypeError !== "" && (
+                <p className="col-span-3 text-red-500">{unitTypeError}</p>
+              )}
             </div>
           </div>
 
           <SheetFooter>
-            <Button type="submit" disabled={createVoyage.isPending} className="mt-2">
-              {createVoyage.isPending?"Sending...":"Create Voyage"}
+            <Button
+              type="submit"
+              disabled={createVoyage.isPending}
+              className="mt-2"
+            >
+              {createVoyage.isPending ? "Sending..." : "Create Voyage"}
             </Button>
           </SheetFooter>
         </form>

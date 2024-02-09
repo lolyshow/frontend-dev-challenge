@@ -1,18 +1,12 @@
 import { UnitType } from "@prisma/client";
 import React from "react";
-import { Button } from "src/components/ui/button";
-import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "src/components/ui/popover";
-
-interface DetailsModalProps {
-  triggerElement: React.ReactNode;
-  unitTypes: UnitType[];
-}
+import { DetailsModalProps } from "~/types/voyage";
 
 export const Detailsmodal = ({
   triggerElement,

@@ -1,19 +1,18 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-
-
-export const VouyageFormSchema = z.object({
-
-  portOfLoading: z.string().min(1),
-  portOfDischarge: z.string().min(1),
-  // vessel: z.string().min(4),
-  departure: z.string(),
-  arrival: z.string().refine((value) => {
-    const departureDate = new Date(value);
-    const currentDate = new Date();
-    return departureDate > currentDate; // Arrival date should be in the future
-  }, { message: 'Arrival date must be in the future' }),
-})
-.refine(data => {
-  return new Date(data.arrival) > new Date(data.departure);
-}, { message: 'Arrival date must be greater than departure date' });
+export const VouyageFormSchema = z
+  .object({
+    portOfLoading: z.string().min(1),
+    portOfDischarge: z.string().min(1),
+    departure: z.string().min(16,{message: "Please Select Departure Date and time"}).max(16),
+    arrival: z.string().min(16,{message: "Please Select Arrival Date and time"}).max(16),
+  })
+  .refine(
+    (data) => {
+      return data.arrival > data.departure;
+    },
+    {
+      message: "Departure date and time should be before arrival date and time",
+      path: ["departure"],
+    },
+  );

@@ -22,3 +22,8 @@ export interface CreateNewVoyageModal {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+export interface DetailsModalProps {
+  triggerElement: React.ReactNode;
+  unitTypes: UnitType[];
+}

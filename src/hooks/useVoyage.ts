@@ -25,7 +25,7 @@ export const useVoyage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete the voyage");
+        throw new Error("Failed to create voyage");
       }
     },
 
@@ -35,7 +35,18 @@ export const useVoyage = () => {
       ] as InvalidateQueryFilters);
       getVoyages.refetch()
       toast({
-        description: "Voyage Created Successfully",
+        style:{background:"green",borderColor:"green"},
+        variant: "destructive",
+        title: "Success!!!",
+        description: "Voyage Created Successfully!!!",
+      });
+    },
+
+    onError() {
+      toast({
+        variant: "destructive",
+        title: "Error!!",
+        description: "There was an error Creating Voyage!!!",
       });
     },
   });
