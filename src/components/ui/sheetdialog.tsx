@@ -92,10 +92,12 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
       setSelectedVessel(undefined);
       setIsFormReset(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createVoyage]);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent>
+      {/* eslint-disable-next-line */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <SheetHeader>
             <SheetTitle>Create Voyage</SheetTitle>

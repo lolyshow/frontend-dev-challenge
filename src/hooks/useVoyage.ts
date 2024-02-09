@@ -6,7 +6,7 @@ import {
 import { useToast } from "~/components/ui/use-toast";
 import { CreateNewVoyagePayload } from "~/types/voyage";
 import { fetchData } from "~/utils";
-import type { ReturnType } from "../pages/api/voyage/getAll";
+import { ReturnType } from "../pages/api/voyage/getAll";
 import { queryClient } from "~/queryClient";
 
 export const useVoyage = () => {
@@ -23,25 +23,25 @@ export const useVoyage = () => {
         method: "POST",
         body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to create voyage");
       }
     },
-
+  
     onSuccess: async () => {
       await queryClient.invalidateQueries([
         "voyages",
       ] as InvalidateQueryFilters);
-      getVoyages.refetch()
+      await getVoyages.refetch();
       toast({
-        style:{background:"green",borderColor:"green"},
+        style: { background: "green", borderColor: "green" },
         variant: "destructive",
         title: "Success!!!",
         description: "Voyage Created Successfully!!!",
       });
     },
-
+  
     onError() {
       toast({
         variant: "destructive",
@@ -50,9 +50,14 @@ export const useVoyage = () => {
       });
     },
   });
+  
 
   return {
     createVoyage,
     getVoyages,
   };
 };
+
+
+
+

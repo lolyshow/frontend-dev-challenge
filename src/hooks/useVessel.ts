@@ -4,9 +4,9 @@ import { useMemo } from "react";
 import { SelectType } from "~/types/selectype";
 import { VesselResponseType } from "~/types/vesselresponsetype";
 
-type UseVessel = {
+interface UseVessel {
   fetch?: boolean;
-};
+}
 
 export const useVessel = ({ fetch }: UseVessel) => {
   const { data: vessels } = useQuery<VesselResponseType[]>({
