@@ -73,8 +73,8 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
     const arrival = convertToAPIDateFormat(arrivalDateValue);
     const departure = convertToAPIDateFormat(departureDateValue);
     const vessel = getValues("vessel");
-    if (selectedUnitTypes?.length < 2) {
-      setUnitTypeError("Please Select 2 or more Unit Types");
+    if (selectedUnitTypes?.length < 5) {
+      setUnitTypeError("Please Select 5 or more Unit Types");
     } else if (vessel === "") {
       setVesselError("Please Select a Vessel");
     } else {
