@@ -45,7 +45,7 @@ export default function Home() {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "Failed to delete the voyage",
+        description: "Failed to delete the voyage. Please try again",
       });
     },
   });

@@ -19,7 +19,6 @@ import {
 } from "src/components/ui/popover";
 import { MultiSelectProps } from "~/types/selectype";
 
-
 export const ComboboxDemo: React.FC<MultiSelectProps> = ({
   options,
   setSelected,

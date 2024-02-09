@@ -5,13 +5,13 @@ import { Command, CommandGroup, CommandItem } from "./command";
 import { Command as CommandPrimitive } from "cmdk";
 import { SelectType } from "~/types/selectype";
 
-interface FancyMultiSelectProps {
+interface MultiSelectProps {
   options: SelectType[];
   setSelected: (selected: SelectType[]) => void;
   selected: SelectType[];
 }
 
-export const FancyMultiSelect: React.FC<FancyMultiSelectProps> = ({
+export const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
   setSelected,
   selected,
@@ -89,7 +89,7 @@ export const FancyMultiSelect: React.FC<FancyMultiSelectProps> = ({
               </button>
             </Badge>
           ))}
-          {/* Avoid having the "Search" Icon */}
+
           <CommandPrimitive.Input
             ref={inputRef}
             value={inputValue}

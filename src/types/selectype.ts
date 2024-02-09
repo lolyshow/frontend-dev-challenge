@@ -7,5 +7,5 @@ export interface SelectType {
 export interface MultiSelectProps {
   options: SelectType[];
   setSelected: (selected: SelectType) => void;
-  selected: SelectType;
+  selected: SelectType|undefined;
 }
