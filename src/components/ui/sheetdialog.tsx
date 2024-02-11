@@ -13,7 +13,7 @@ import { Label } from "./label";
 import { Input } from "./input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CreateNewVoyageModal, CreateNewVoyagePayload } from "~/types/voyage";
-import { MultiSelect } from "./multi-select";
+import { MultiSelect } from "./multiselect";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { VouyageFormSchema } from "~/schemas/voyageformschema";
