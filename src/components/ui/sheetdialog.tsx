@@ -98,7 +98,7 @@ export const SheetDialog = ({ isOpen, onOpenChange }: CreateNewVoyageModal) => {
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent>
       {/* eslint-disable-next-line */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className=" overflow-scroll h-full px-1">
           <SheetHeader>
             <SheetTitle>Create Voyage</SheetTitle>
             <SheetDescription>
